@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>強みを深掘る「ツヨミホルン」</title>
+    <style>
+        /* 全体のデザイン（温かみのあるポップなスタイル） */
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: #FFF9E6; /* 温かみのある薄い黄色 */
+            color: #4A3B32; /* 優しいダークブラウン */
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #FFFFFF;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(218, 180, 140, 0.3);
+            padding: 30px;
+            max-width: 620px;
+            width: 100%;
+            border: 3px solid #FFD3B6; /* パステルオレンジの枠線 */
+        }
+
+        h1 {
+            text-align: center;
+            color: #FF8B94; /* ポップなピンク */
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 0px #FFF;
+        }
+
+        .main-img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto 20px;
+            border-radius: 10px;
+        }
+
+        .step {
+            display: none; /* 基本は非表示 */
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        .instruction {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            background-color: #FFF0F5;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #FF8B94;
+        }
+
+        .btn-group, .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background-color: #FFAAA5; /* 温かみのあるコーラルピンク */
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            box-shadow: 0 4px 0px #DD8B85;
+        }
+
+        .btn:hover {
+            background-color: #FF8B94;
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background-color: #A8E6CF; /* パステルグリーン */
+            box-shadow: 0 4px 0px #85C4AD;
+            color: #4A3B32;
+        }
+        .btn-secondary:hover { background-color: #92D7BD; }
+
+        /* アコーディオンのスタイル */
+        .accordion-container {
+            margin-bottom: 20px;
+        }
+
+        .accordion-header {
+            background-color: #FFEAA7;
+            color: #4A3B32;
+            padding: 12px 15px;
+            font-weight: bold;
+            font-size: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #E6D08C;
+        }
+
+        .accordion-header:hover {
+            background-color: #FFD3B6;
+        }
+
+        .accordion-header::after {
+            content: '▼';
+            font-size: 12px;
+            transition: transform 0.3s;
+        }
+
+        .accordion-header.open::after {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            display: none;
+            background-color: #FFFDF9;
+            padding: 10px;
+            border: 1px solid #FFD3B6;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .keyword-option {
+            display: flex;
+            align-items: center;
+            background-color: #FFFFFF;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            border: 1px solid #EAEAEA;
+        }
+
+        .keyword-option:hover {
+            background-color: #FFF0F5;
+        }
+
+        .keyword-option input {
+            margin-right: 12px;
+            transform: scale(1.2);
+        }
+
+        .keyword-text {
+            font-size: 14px;
+        }
+
+        .keyword-desc {
+            font-size: 12px;
+            color: #777;
+            margin-left: 5px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 140px;
+            padding: 12px;
+            border-radius: 15px;
+            border: 2px solid #FFD3B6;
+            font-size: 14px;
+            resize: none;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            font-family: inherit;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #FFAAA5;
+            background-color: #FFFDF9;
+        }
+
+        /* ヒント表示ボックス */
+        .hint-text {
+            background-color: #EDF9E7;
+            padding: 18px;
+            border-radius: 15px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            border-left: 6px solid #7BCD55;
+            font-size: 15px;
+        }
+
+        .hint-quote {
+            background-color: #FFFFFF;
+            border: 1px dashed #7BCD55;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .advice-box {
+            background-color: #FFFEE6;
+            border: 1px solid #E6D08C;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .password-box {
+            background-color: #F0F4F8;
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 20px;
+            border: 2px dashed #B0C4DE;
+            text-align: center;
+        }
+
+        .password-box input {
+            padding: 8px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #CCC;
+            width: 120px;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+        .result-box {
+            background-color: #FFF;
+            border: 3px dashed #FF8B94;
+            padding: 22px;
+            border-radius: 15px;
+            margin-top: 15px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            font-size: 15px;
+            color: #2D2D2D;
+        }
+
+        .counter {
+            text-align: right;
+            font-size: 13px;
+            color: #666;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+        
+        .tip-badge {
+            display: inline-block;
+            background-color: #FF8B94;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-size: 11px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>強みを深掘る「ツヨミホルン」</h1>
+
+    <!-- STEP 1: 進路選択 -->
+    <div id="step1" class="step active">
+        <img src="https://raw.githubusercontent.com/t3takahashit3-cell/matsukawapr2/main/img.png" onerror="this.src='https://github.com/t3takahashit3-cell/matsukawapr2/blob/main/img.png?raw=true'" alt="ツヨミホルン" class="main-img">
+        <div class="instruction">まずは、あなたの今の希望の進路を教えてね！どちらを選んでも、あなたにぴったりの自己PRを一緒に作るよ。</div>
+        <div class="btn-group">
+            <button class="btn" onclick="selectPath('就職')">💼 就職を希望する</button>
+            <button class="btn btn-secondary" onclick="selectPath('進学')">🎓 進学を希望する</button>
+        </div>
+    </div>
+
+    <!-- STEP 2: 強みのキーワード3つ選択 -->
+    <div id="step2" class="step">
+        <div class="instruction">下の大項目（〜力）をクリックすると、細かい強みが出てくるよ！<br>この中から、あなたが自分の強みだと感じるものを【3つ】選んでください。</div>
+        <div class="accordion-container" id="keyword-accordion">
+            <!-- JSでアコーディオンを自動生成 -->
+        </div>
+        <button class="btn" style="width:100%" onclick="submitKeywords()">3つ選んだので次へすすむ ➔</button>
+    </div>
+
+    <!-- STEP 3: 最もエピソードがある強みを1つ選択 -->
+    <div id="step3" class="step">
+        <div class="instruction">選んでくれた3つの強みはこちら！<br>この中で、強みを証明できるエピソードがあるもの（一番説明しやすいもの）を【1つ】選んでね。</div>
+        <div class="radio-group" id="selected-three-group">
+            <!-- JSで選択された3つを表示 -->
+        </div>
+        <button class="btn" style="width:100%" onclick="submitMainKeyword()">次へすすむ ➔</button>
+    </div>
+
+    <!-- STEP 4: エピソード自由記述 -->
+    <div id="step4" class="step">
+        <div class="instruction">選んだ強みについて、高校生活（部活、勉強、行事、アルバイトなど）で「がんばったこと」や「実際にあった出来事」を自由に書いてみよう！</div>
+        <p>💡 <strong>選んだ強み：</strong> <span id="display-main-keyword" style="color:#FF8B94; font-weight:bold;"></span></p>
+        <textarea id="episode-input" placeholder="（例）部活の練習を毎日がんばりました。みんなで声を掛け合って、大会で勝つことができました。"></textarea>
+        <div style="text-align:right; font-size:12px; color:#888; margin-bottom:15px;">※一言だけの短い作文でも、アプリが自動できれいな文章に直すから安心してね！</div>
+        <button class="btn" style="width:100%" onclick="submitEpisode()">ヒントを見る ➔</button>
+    </div>
+
+    <!-- STEP 5: ヒント提示とパスワード -->
+    <div id="step5" class="step">
+        <div class="instruction">エピソードを書いてくれてありがとう！あなたの強みがどう活きるか、ヒントをまとめたよ！</div>
+        <div class="hint-text" id="hint-output"></div>
+        
+        <div class="password-box">
+            <p style="margin-top:0; font-weight:bold;">🔒 先生から教えてもらった「パスワード」を入力してね</p>
+            <input type="password" id="pwd-input" placeholder="パスワードを入力">
+            <button class="btn" style="padding: 8px 20px; font-size:14px;" onclick="checkPassword()">解除して自己PRを作る</button>
+        </div>
+    </div>
+
+    <!-- STEP 8: 最終出力 -->
+    <div id="step8" class="step">
+        <div class="instruction">✨ おめでとう！あなたの自己PR文章が完成したよ！ ✨<br>この文章をベースにして、面接や提出書類の準備を進めていこう！</div>
+        <div class="result-box" id="result-output"></div>
+        <div class="counter" id="char-count"></div>
+        <br>
+        <button class="btn btn-secondary" style="width:100%" onclick="location.reload()">もう一度最初からやる</button>
+    </div>
+</div>
+
+<script>
+    // 「自己PRワード.docx」のデータ構造[cite: 1]
+    const data = [
+        { category: "■① 人と協力する力", desc: "周囲の人と良好な関係を築き、協力しながら目標達成を目指す力", skills: [
+            { name: "協調性", detail: "周囲と協力しながら物事を進められる" },
+            { name: "コミュニケーション力", detail: "自分の考えを伝え、相手と意思疎通できる" },
+            { name: "傾聴力", detail: "相手の話を丁寧に聞き、理解しようとする" },
+            { name: "気配り", detail: "周囲の状況に気付き、適切な配慮ができる" },
+            { name: "サポート力", detail: "仲間を支え、チームに貢献できる" }
+        ], contribution: "バラバラになりがちなチームを一つにまとめたり、困っている仲間をフォローして全体の成果を底上げする貢献" },
+        { category: "■② 人を動かす力", desc: "自ら周囲に働きかけ、チームや集団をより良い方向へ導く力", skills: [
+            { name: "リーダーシップ", detail: "目標達成に向けて周囲をまとめられる" },
+            { name: "発信力", detail: "自分の考えや意見を分かりやすく伝えられる" },
+            { name: "巻き込み力", detail: "周囲の協力を得ながら活動を進められる" },
+            { name: "積極性", detail: "自分から進んで行動できる" },
+            { name: "主体性", detail: "指示を待たず、自ら考えて行動できる" }
+        ], contribution: "目標に向かって集団に活気を与え、新しい行動を起こすための原動力として周囲を引っ張る貢献" },
+        { category: "■③ 挑戦する力", desc: "新しいことや困難なことに前向きに取り組み、行動を起こす力", skills: [
+            { name: "挑戦力", detail: "未経験のことにも果敢に取り組める" },
+            { name: "行動力", detail: "思いついたことをすぐに実行に移せる" },
+            { name: "実行力", detail: "計画したことを最後まで実践できる" },
+            { name: "適応力", detail: "新しい環境や変化に対応できる" },
+            { name: "柔軟性", detail: "状況に応じて考え方や行動を変えられる" }
+        ], contribution: "前例のない課題や急な変化に対しても、臆することなくチームの新しい道を切り拓いていく貢献" },
+        { category: "■④ やり抜く力", desc: "目標に向かって粘り強く努力し、最後まで取り組む力", skills: [
+            { name: "責任感", detail: "任されたことを最後までやり遂げる" },
+            { name: "継続力", detail: "コツコツと努力を続けられる" },
+            { name: "忍耐力", detail: "困難な状況でも諦めずに取り組める" },
+            { name: "向上心", detail: "常に成長を目指して努力できる" },
+            { name: "集中力", detail: "一つのことに集中して取り組める" },
+            { name: "誠実さ", detail: "真面目な姿勢で信頼を得られる" },
+            { name: "素初さ", detail: "助言や指摘を受け入れ成長につなげられる" }
+        ], contribution: "困難な状況でも集団の軸として途中で投げ出さず、周囲から『この人に任せれば安心だ』という絶大な信頼を得る貢献" },
+        { category: "■⑤ 考える力", desc: "状況を分析し、課題を見つけて解決策を考える力", skills: [
+            { name: "計画性", detail: "目標達成までの手順を考えられる" },
+            { name: "分析力", detail: "情報を整理し、原因や傾向を考えられる" },
+            { name: "判断力", detail: "状況に応じて適切な選択ができる" },
+            { name: "課題発見力", detail: "問題や改善点に気付くことができる" },
+            { name: "改善力", detail: "より良い方法を考え実行できる" },
+            { name: "観察力", detail: "周囲の変化や特徴に気付くことができる" }
+        ], contribution: "集団が見落としがちな問題点にいち早く気づき、トラブルを未然に防いだり効率的な進め方を提案する貢献" },
+        { category: "■⑥ 新しい価値を生み出す力", desc: "新しいアイデアを考えたり、興味を持って深く学んだりする力", skills: [
+            { name: "創造力", detail: "新しい発想や作品を生み出せる" },
+            { name: "探究心", detail: "疑問を持ち、深く調べて学べる" },
+            { name: "発想力", detail: "既存の考えにとらわれずアイデアを出せる" },
+            { name: "好奇心", detail: "幅広いことに興味を持って挑戦できる" },
+            { name: "企画力", detail: "アイデアを具体的な計画として形にできる" }
+        ], contribution: "マンネリ化した集団に新しい風を吹き込み、面白い企画や斬新な視点で活動をワクワクするものに変える貢献" }
+    ];
+
+    let appState = {
+        path: '',         
+        selectedThree: [], 
+        mainKeyword: null, 
+        mainCategory: null,
+        episode: ''       
+    };
+
+    // アコーディオン生成
+    const accordionContainer = document.getElementById('keyword-accordion');
+    data.forEach((cat, index) => {
+        const header = document.createElement('div');
+        header.className = 'accordion-header';
+        header.innerText = cat.category;
+        header.onclick = () => toggleAccordion(index);
+        header.id = `accordion-header-${index}`;
+
+        const content = document.createElement('div');
+        content.className = 'accordion-content';
+        content.id = `accordion-content-${index}`;
+
+        cat.skills.forEach(skill => {
+            const label = document.createElement('label');
+            label.className = 'keyword-option';
+            label.innerHTML = `
+                <input type="checkbox" name="keywords" value="${skill.name}" data-detail="${skill.detail}" data-catidx="${index}" onchange="checkLimit(this)">
+                <span class="keyword-text"><strong>${skill.name}</strong></span>
+                <span class="keyword-desc">（${skill.detail}）</span>
+            `;
+            content.appendChild(label);
+        });
+
+        accordionContainer.appendChild(header);
+        accordionContainer.appendChild(content);
+    });
+
+    function toggleAccordion(index) {
+        const content = document.getElementById(`accordion-content-${index}`);
+        const header = document.getElementById(`accordion-header-${index}`);
+        const isOpen = content.style.display === 'block';
+        content.style.display = isOpen ? 'none' : 'block';
+        if (isOpen) header.classList.remove('open');
+        else header.classList.add('open');
+    }
+
+    function checkLimit(checkbox) {
+        const checkedBoxes = document.querySelectorAll('input[name="keywords"]:checked');
+        if (checkedBoxes.length > 3) {
+            alert('選べるキーワードは3つまでだよ！');
+            checkbox.checked = false;
+        }
+    }
+
+    function selectPath(choice) {
+        appState.path = choice;
+        goToStep(2);
+    }
+
+    function submitKeywords() {
+        const checkedBoxes = document.querySelectorAll('input[name="keywords"]:checked');
+        if (checkedBoxes.length !== 3) {
+            alert('あなたの強みを【3つ】選んでね！（現在は ' + checkedBoxes.length + ' 個選択中）');
+            return;
+        }
+        
+        appState.selectedThree = [];
+        checkedBoxes.forEach(box => {
+            appState.selectedThree.push({
+                name: box.value,
+                detail: box.getAttribute('data-detail'),
+                catIdx: box.getAttribute('data-catidx')
+            });
+        });
+
+        const radioGroup = document.getElementById('selected-three-group');
+        radioGroup.innerHTML = '';
+        appState.selectedThree.forEach(skill => {
+            const label = document.createElement('label');
+            label.className = 'keyword-option';
+            label.innerHTML = `
+                <input type="radio" name="main-keyword" value="${skill.name}">
+                <span class="keyword-text"><strong>${skill.name}</strong></span>
+                <span class="keyword-desc">（${skill.detail}）</span>
+            `;
+            radioGroup.appendChild(label);
+        });
+
+        goToStep(3);
+    }
+
+    function submitMainKeyword() {
+        const selectedRadio = document.querySelector('input[name="main-keyword"]:checked');
+        if (!selectedRadio) {
+            alert('エピソードがある強みを1つ選んでね！');
+            return;
+        }
+        appState.mainKeyword = appState.selectedThree.find(s => s.name === selectedRadio.value);
+        appState.mainCategory = data[appState.mainKeyword.catIdx];
+        
+        document.getElementById('display-main-keyword').innerText = `${appState.mainKeyword.name}（${appState.mainKeyword.detail}）`;
+        goToStep(4);
+    }
+
+    function submitEpisode() {
+        const input = document.getElementById('episode-input').value.trim();
+        if (input === "") {
+            alert('エピソードを何か書いてみてね！箇条書きでも大丈夫だよ。');
+            return;
+        }
+        appState.episode = input;
+
+        const name = appState.mainKeyword.name;
+        const detail = appState.mainKeyword.detail;
+        const contribution = appState.mainCategory.contribution;
+        
+        let hint = `<h3>💖 あなたの強みは社会や学校でこう輝くよ！</h3>`;
+        hint += `あなたが選んだ<strong>『${name}』</strong>は、集団の中で<br><span style="color:#D84B6B; font-weight:bold;">「${contribution}」</span>という大きなメリットに繋がります。これは、${appState.path}先でも間違いなく求められる特別な力です！<br><br>`;
+        hint += `あなたが書いてくれたエピソードはこちら：`;
+        hint += `<div class="hint-quote">「${input}」</div>`;
+        
+        if (input.length < 35) {
+            hint += `<div class="advice-box">`;
+            hint += `<span class="tip-badge">もっと良くなるアドバイス！</span><br>`;
+            hint += `今の文章でも事実は伝わるけれど、面接官や先生は<strong>『あなたがその時どう考えて、どんな具体的な行動をしたか』</strong>をもっと知りたがっています！<br><br>`;
+            hint += `<strong>💡 例えば、こんな風に考えてみよう：</strong><br>`;
+            hint += `・『${input.substring(0,15)}…』の時、周りはどんな状況だった？（例：意見がすれ違っていた、みんな疲れていた等）<br>`;
+            hint += `・その時、あなた自身は<strong>どんな一工夫や声かけ</strong>を意識したかな？（例：まず相手の話を最後まで聞くようにした、誰よりも早く準備を始めた等）<br><br>`;
+            hint += `※「深掘りが難しい…」という場合も大丈夫！アプリがこの後の完成文で、きみの代わりに『見事なプロセス』として文章を綺麗に肉付けしておいたよ！`;
+            hint += `</div>`;
+        } else {
+            hint += `<p>✨ 素晴らしい！具体的な状況が書かれていて、あなたが${name}を発揮した様子が目に浮かぶようです。この調子で自信を持っていこう！</p>`;
+        }
+
+        document.getElementById('hint-output').innerHTML = hint;
+        goToStep(5);
+    }
+
+    function checkPassword() {
+        const pwd = document.getElementById('pwd-input').value;
+        if (pwd === "0618") {
+            generateSelfPR();
+            goToStep(8);
+        } else {
+            alert('パスワードが違うみたい。もう一度確かめて入力してね！');
+        }
+    }
+
+    function generateSelfPR() {
+        const name = appState.mainKeyword.name;
+        const detail = appState.mainKeyword.detail;
+        const originalEpisode = appState.episode;
+
+        let advantageText = `周囲の状況を冷静に捉えて、自分が集団のためにすべきことを主体的に考えて行動に移すこと`;
+        let prText = "";
+        
+        if (appState.path === "就職") {
+            prText = `私の強みは${name}です。${advantageText}に自信があります。高校時代には、${originalEpisode}という経験をしました。当時は大変な局面もありましたが、私は自ら一歩踏み出し、周囲と対話を重ねることで課題を克服し、集団の目標達成に貢献しました。この経験から、主体的に動くことが組織の成果に繋がると学びました。貴社に入社いたしましたら、この${name}を最大限に活かし、チームの一員として責任を持って日々の業務に取り組み、貢献してまいります。`;
+            
+            if (prText.length > 260) {
+                prText = `私の強みは${name}です。${detail}ことを通じて、集団の成果に貢献できます。高校時代、${originalEpisode}の際には、状況を良くするために自ら考えて行動に移し、最後までやり遂げました。この強みを活かし、貴社に入社後も周囲の状況に配慮しながら日々の業務に誠実に取り組み、貢献してまいります。`;
+            }
+        } else {
+            prText = `私の強みは、${detail}ができる${name}です。周囲の状況や課題に対して、自分に何ができるかを客観的に分析し、集団のために最適なアプローチを実行することに自信を持っています。\nこの強みは高校生活の中で培われました。具体的には、${originalEpisode}という経験があります。当初は思い通りに進まないことや集団としての課題もありましたが、私はそこで立ち止まらず、メンバーの様子を観察しながら必要な対話やサポートを継続しました。その結果、チームに一体感が生まれ、目標としていた結果を残すことができました。この経験を通じて、一人ひとりの強みを結集させることが大きな成果を生むのだと深く学びました。\n貴学に入学した際にも、この${name}を大いに活かしたいと考えています。講義やゼミナール、地域社会での探究活動において、周囲と良好な関係を築きながら主体的に学びを深めてまいります。`;
+        }
+
+        document.getElementById('result-output').innerText = prText;
+        document.getElementById('char-count').innerText = `現在の文字数: ${prText.length} 文字`;
+    }
+
+    function goToStep(stepNum) {
+        document.querySelectorAll('.step').forEach(step => {
+            step.classList.remove('active');
+        });
+        document.getElementById('step' + stepNum).classList.add('active');
+        window.scrollTo(0, 0);
+    }
+</script>
+
+</body>
+</html>
